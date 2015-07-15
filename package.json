@@ -1,0 +1,32 @@
+{
+  "name": "treeview-react-bootstrap",
+  "version": "0.0.0",
+  "description": "Nice, easy to use component to displaying tree structures, made with React and Twitter Bootstrap",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eliftech/treeview-react-bootstrap.git"
+  },
+  "keywords": [
+    "tree",
+    "treeview",
+    "tree-view",
+    "react",
+    "react-component",
+    "bootstrap",
+    "javascript"
+  ],
+  "author": {
+    "name": "Elif Technologies"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliftech/treeview-react-bootstrap/issues"
+  },
+  "dependencies": {
+    "react": "~0.13.3"
+  }
+}
