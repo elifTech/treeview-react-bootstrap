@@ -1,5 +1,18 @@
 var React = require('react');
 
+var treeviewSpanStyle = {
+  "width": "1rem",
+  "height": "1rem"
+};
+
+var treeviewSpanIndentStyle = treeviewSpanStyle;
+treeviewSpanIndentStyle["margin-left"] = "10px";
+treeviewSpanIndentStyle["margin-right"] = "10px";
+
+var treeviewSpanIconStyle = treeviewSpanStyle;
+treeviewSpanIconStyle["margin-left"] = "10px";
+treeviewSpanIconStyle["margin-right"] = "5px";
+
 var TreeView = React.createClass({displayName: "TreeView",
 
   propTypes: {
@@ -131,7 +144,7 @@ var TreeView = React.createClass({displayName: "TreeView",
   },
 
   render: function() {
-	  var data = this.state.data;
+    var data = this.state.data;
     var children = [];
     if (data) {
       var _this = this;
@@ -220,21 +233,24 @@ var TreeNode = React.createClass({displayName: "TreeNode",
 
     var indents = [];
     for (var i = 0; i < this.props.level-1; i++) {
-      indents.push(React.createElement("span", {className: "indent"}));
+      indents.push(React.createElement("span", {className: "indent", 
+        style: treeviewSpanIndentStyle}));
     }
 
     var expandCollapseIcon;
     if (node.nodes) {
       if (!this.state.expanded) {
         expandCollapseIcon = (
-          React.createElement("span", {className: options.expandIcon, 
+          React.createElement("span", {className: options.expandIcon,
+                style: treeviewSpanStyle, 
                 onClick: this.toggleExpanded.bind(this, node.nodeId)}
           )
         );
       }
       else {
         expandCollapseIcon = (
-          React.createElement("span", {className: options.collapseIcon, 
+          React.createElement("span", {className: options.collapseIcon,
+                style: treeviewSpanStyle,
                 onClick: this.toggleExpanded.bind(this, node.nodeId)}
           )
         );
@@ -242,12 +258,14 @@ var TreeNode = React.createClass({displayName: "TreeNode",
     }
     else {
       expandCollapseIcon = (
-        React.createElement("span", {className: options.emptyIcon})
+        React.createElement("span", {className: options.emptyIcon, 
+          style: treeviewSpanStyle})
       );
     }
 
     var nodeIcon = (
-      React.createElement("span", {className: "icon"}, 
+      React.createElement("span", {className: "icon",
+        style: treeviewSpanIconStyle}, 
         React.createElement("i", {className: node.icon || options.nodeIcon})
       )
     );
@@ -262,7 +280,7 @@ var TreeNode = React.createClass({displayName: "TreeNode",
     }
     else {
       nodeText = (
-        React.createElement("span", null, node.text)
+        React.createElement("span", {style: treeviewSpanStyle}, node.text)
       );
     }
 
@@ -270,7 +288,8 @@ var TreeNode = React.createClass({displayName: "TreeNode",
     if (options.showTags && node.tags) {
       badges = node.tags.map(function (tag) {
         return (
-          React.createElement("span", {className: "badge"}, tag)
+          React.createElement("span", {className: "badge", 
+            style: treeviewSpanStyle}, tag)
         );
       });
     }
@@ -280,13 +299,15 @@ var TreeNode = React.createClass({displayName: "TreeNode",
       var _this = this;
       node.nodes.forEach(function (node) {
         children.push(React.createElement(TreeNode, {node: node,
-                                key: node.nodeId,  
-                                level: _this.props.level+1, 
-                                visible: _this.state.expanded && _this.props.visible,
-                                onSelectedStatusChanged: _this.props.onSelectedStatusChanged, 
-                                options: options}));
+                          key: node.nodeId,  
+                          level: _this.props.level+1, 
+                          visible: _this.state.expanded && _this.props.visible,
+                          onSelectedStatusChanged: _this.props.onSelectedStatusChanged, 
+                          options: options}));
       });
     }
+
+    style["cursor"] = "pointer";
 
     return (
       React.createElement("li", {className: "list-group-item", 
