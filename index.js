@@ -140,7 +140,8 @@ var TreeView = React.createClass({displayName: "TreeView",
     this.setChildrenState(node.nodes, selected);
     this.setState({ data: this.props.data });
 
-    this.props.onClick(this.props.data);
+    if (this.props.onClick)
+      this.props.onClick(this.props.data);
   },
 
   render: function() {

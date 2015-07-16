@@ -1,6 +1,6 @@
 {
   "name": "treeview-react-bootstrap",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Nice, easy to use component to displaying tree structures, made with React and Twitter Bootstrap",
   "main": "index.js",
   "scripts": {
