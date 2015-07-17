@@ -15,9 +15,18 @@
 
 <pre><code>
   var TreeView = require('treeview-react-bootstrap');
-
+</code></pre>
+###### if you use *.jsx :
+<pre><code>
   React.render(
     &lt;TreeView data={data} /&gt;,
     document.getElementById('treeview')
   );
+</code></pre>
+###### if you use *.js :
+<pre><code>
+  React.render(                
+				React.createElement(TreeView, {data: data}),
+				document.getElementById('treeview')
+			);
 </code></pre>
