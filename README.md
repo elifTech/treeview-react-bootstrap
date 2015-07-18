@@ -5,6 +5,8 @@
   <a href="https://github.com/twbs/bootstrap">Twitter Bootstrap</a> <br />
   Based on <a href="https://github.com/jonmiles/react-bootstrap-treeview">jonmiles/react-bootstrap-treeview</a>, 
   but provides a set of additional useful features
+##### Try it :
+  You can see an example <a href="http://eliftech.github.io/treeview-react-bootstrap">here</a>
 
 ### Installation
 <pre><code>
