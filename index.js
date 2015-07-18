@@ -49,7 +49,7 @@ var TreeView = React.createClass({displayName: "TreeView",
       unselectedIcon: 'glyphicon glyphicon-unchecked',
       selectedIcon: 'glyphicon glyphicon-check',
 
-      color: undefined,
+      color: "#428bca",
       backColor: undefined,
       borderColor: undefined,
       onhoverColor: '#F5F5F5', // TODO Not implemented yet, investigate radium.js 'A toolchain for React component styling'
