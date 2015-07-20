@@ -22,7 +22,12 @@
   "author": {
     "name": "Elif Technologies"
   },
-  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/eliftech/treeview-react-bootstrap/blob/master/LICENSE"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/eliftech/treeview-react-bootstrap/issues"
   },
