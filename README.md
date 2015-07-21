@@ -23,7 +23,7 @@
   React.render(
     &lt;TreeView data={data} /&gt;,
     document.getElementById('treeview')
-  );
+ );
 </code></pre>
 ###### if you use *.js :
 <pre><code>
