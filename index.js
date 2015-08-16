@@ -235,7 +235,7 @@ var TreeNode = React.createClass({displayName: "TreeNode",
     var indents = [];
     for (var i = 0; i < this.props.level-1; i++) {
       indents.push(React.createElement("span", {className: "indent", 
-        style: treeviewSpanIndentStyle}));
+        style: treeviewSpanIndentStyle, key: i}));
     }
 
     var expandCollapseIcon;
