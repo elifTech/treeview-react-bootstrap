@@ -6,12 +6,12 @@ var treeviewSpanStyle = {
 };
 
 var treeviewSpanIndentStyle = treeviewSpanStyle;
-treeviewSpanIndentStyle["margin-left"] = "10px";
-treeviewSpanIndentStyle["margin-right"] = "10px";
+treeviewSpanIndentStyle["marginLeft"] = "10px";
+treeviewSpanIndentStyle["marginRight"] = "10px";
 
 var treeviewSpanIconStyle = treeviewSpanStyle;
-treeviewSpanIconStyle["margin-left"] = "10px";
-treeviewSpanIconStyle["margin-right"] = "5px";
+treeviewSpanIconStyle["marginLeft"] = "10px";
+treeviewSpanIconStyle["marginRight"] = "5px";
 
 var TreeView = React.createClass({displayName: "TreeView",
 
