@@ -141,7 +141,7 @@ var TreeView = React.createClass({displayName: "TreeView",
     this.setState({ data: this.props.data });
 
     if (this.props.onClick)
-      this.props.onClick(this.props.data);
+      this.props.onClick(this.props.data, node);
   },
 
   render: function() {
