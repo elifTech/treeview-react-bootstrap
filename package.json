@@ -31,7 +31,10 @@
   "bugs": {
     "url": "https://github.com/eliftech/treeview-react-bootstrap/issues"
   },
-  "dependencies": {
-    "react": "~0.13.3"
+  "devDependencies": {
+    "react": ">= 0.13.0"
+  },
+  "peerDependencies": {
+    "react": ">= 0.13.0"
   }
 }
