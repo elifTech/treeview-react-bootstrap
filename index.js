@@ -144,6 +144,13 @@ var TreeView = React.createClass({displayName: "TreeView",
       this.props.onClick(this.props.data, node);
   },
 
+  nodeDoubleClicked: function(nodeId, selected)
+  {
+    var node = this.findNodeById(this.props.data, nodeId);
+    if (this.props.onDoubleClick)
+      this.props.onDoubleClick(this.props.data, node);
+  },
+
   render: function() {
     var data = this.state.data;
     var children = [];
@@ -155,6 +162,7 @@ var TreeView = React.createClass({displayName: "TreeView",
                                 level: 1, 
                                 visible: true, 
                                 onSelectedStatusChanged: _this.nodeSelected,
+                                onNodeDoubleClicked: _this.nodeDoubleClicked,
                                 options: _this.props}));
       });
     }
@@ -194,6 +202,12 @@ var TreeNode = React.createClass({displayName: "TreeNode",
   toggleSelected: function(id, event) {
     var selected = !this.props.node.state.selected;
     this.props.onSelectedStatusChanged(id, selected);
+    event.stopPropagation();
+  },
+  
+  doubleClicked: function(id, event) {
+    var selected = !this.props.node.state.selected;
+    this.props.onNodeDoubleClicked(id, selected);
     event.stopPropagation();
   },
 
@@ -304,6 +318,7 @@ var TreeNode = React.createClass({displayName: "TreeNode",
                           level: _this.props.level+1, 
                           visible: _this.state.expanded && _this.props.visible,
                           onSelectedStatusChanged: _this.props.onSelectedStatusChanged, 
+                          onNodeDoubleClicked: _this.props.onNodeDoubleClicked,
                           options: options}));
       });
     }
@@ -313,7 +328,8 @@ var TreeNode = React.createClass({displayName: "TreeNode",
     return (
       React.createElement("li", {className: "list-group-item", 
           style: style, 
-          onClick: this.toggleSelected.bind(this, node.nodeId), 
+          onClick: this.toggleSelected.bind(this, node.nodeId),
+          onDoubleClick: this.doubleClicked.bind(this, node.nodeId),
           key: node.nodeId}, 
         indents, 
         expandCollapseIcon, 
