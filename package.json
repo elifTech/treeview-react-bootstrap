@@ -1,6 +1,6 @@
 {
   "name": "treeview-react-bootstrap",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Nice, easy to use component to displaying tree structures, made with React and Twitter Bootstrap",
   "main": "index.js",
   "scripts": {
@@ -32,9 +32,9 @@
     "url": "https://github.com/eliftech/treeview-react-bootstrap/issues"
   },
   "devDependencies": {
-    "react": ">= 0.13.0"
+    "react": ">= 0.14.6"
   },
   "peerDependencies": {
-    "react": ">= 0.13.0"
+    "react": ">= 0.14.6"
   }
 }
