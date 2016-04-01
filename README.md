@@ -28,7 +28,7 @@
 ###### if you use *.js :
 <pre><code>
   React.render(                
-		React.createElement(TreeView, {data: data}),
-		document.getElementById('treeview')
-		);
+	React.createElement(TreeView, {data: data}),
+	document.getElementById('treeview')
+  );
 </code></pre>

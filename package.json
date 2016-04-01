@@ -4,7 +4,7 @@
   "description": "Nice, easy to use component to displaying tree structures, made with React and Twitter Bootstrap",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "webpack"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,13 @@
     "url": "https://github.com/eliftech/treeview-react-bootstrap/issues"
   },
   "devDependencies": {
-    "react": ">= 0.14.6"
+    "react": ">= 0.14.6",
+    "babel-core": "^6.3.21",
+    "babel-loader": "^6.2.0",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13"
   },
   "peerDependencies": {
     "react": ">= 0.14.6"

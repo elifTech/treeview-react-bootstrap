@@ -187,7 +187,7 @@ TreeView.defaultProps = {
   nodes: []
 };
 
-class TreeNode extends React.Component {
+export class TreeNode extends React.Component {
 
   constructor(props) {
     super(props);
@@ -323,20 +323,18 @@ class TreeNode extends React.Component {
     style["cursor"] = "pointer";
 
     return (
-        React.createElement("li", {className: "list-group-item",
-              style: style,
-              onClick: this.toggleSelected,
-              onDoubleClick: this.doubleClicked,
-              key: node.nodeId},
-            indents,
-            expandCollapseIcon,
-            nodeIcon,
-            nodeText,
-            badges,
-            children
-        )
+        <li className="list-group-item"
+            style={style}
+            onClick={this.toggleSelected}
+            onDoubleClick={this.doubleClicked}
+            key={node.nodeId}>
+            {indents}
+            {expandCollapseIcon}
+            {nodeIcon}
+            {nodeText}
+            {badges}
+            {children}
+        </li>
     );
   }
 }
-
-export default TreeView
