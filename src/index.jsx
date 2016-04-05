@@ -118,21 +118,22 @@ class TreeView extends React.Component {
   }
 
   render() {
-    console.log("render");
     let data = this.state.data;
     let children = [];
     if (data) {
       let _this = this;
       data.forEach(function (node) {
-        children.push(React.createElement(TreeNode, {
-          node: node,
-          key: node.nodeId,
-          level: 1,
-          visible: true,
-          onSelectedStatusChanged: _this.nodeSelected,
-          onNodeDoubleClicked: _this.nodeDoubleClicked,
-          options: _this.props
-        }));
+        children.push(
+            <TreeNode
+                node={node}
+                key={node.nodeId}
+                level={1}
+                visible={true}
+                onSelectedStatusChanged={_this.nodeSelected}
+                onNodeDoubleClicked={_this.nodeDoubleClicked}
+                options={_this.props}
+            />
+        );
       });
     }
 
@@ -341,6 +342,7 @@ export class TreeNode extends React.Component {
     }
 
     style["cursor"] = "pointer";
+    if(node.parentNode.parentNode && !node.parentNode.parentNode.nodeId) style["border"] = "none";
 
     let treeNode = (
         <li className="list-group-item"
