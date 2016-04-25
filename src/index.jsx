@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash';
 
 let treeviewSpanStyle = {
   "width": "1rem",
@@ -17,39 +18,48 @@ class TreeView extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {data: props.data};
-    this.setNodeId({nodes: this.state.data});
+
+    this.nodesQuantity = 0;
+
+    /*this.state = {data: props.data};
+     this.someData = _.clone(props.data);
+     this.setNodeId({nodes: this.state.data});*/
+
+
+    this.state = {data: this.setNodeId(_.clone({nodes: props.data}))};
+
+
     this.findNodeById = this.findNodeById.bind(this);
     this.setChildrenState = this.setChildrenState.bind(this);
     this.setParentSelectable = this.setParentSelectable.bind(this);
     this.checkParentEmpty = this.checkParentEmpty.bind(this);
     this.nodeSelected = this.nodeSelected.bind(this);
     this.nodeDoubleClicked = this.nodeDoubleClicked.bind(this);
+    this.addNode = this.addNode.bind(this);
+    this.removeNode = this.removeNode.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.data});
-    this.setNodeId({nodes: nextProps.data});
+    this.setState({data: this.setNodeId(_.clone({nodes: nextProps.data}))});
   }
 
   setNodeId(node) {
 
     if (!node.nodes) return;
 
-    let _this = this;
-    let parentNode = node;
-    node.nodes.forEach(function checkStates(node) {
-      node.nodeId = _this.props.nodes.length;
-      node.parentNode = parentNode;
-      if (!node.state) {
-        node.state = {}
+    return node.nodes.map(childNode => {
+      return {
+        nodeId: this.nodesQuantity++,
+        nodes: this.setNodeId(childNode),
+        parentNode: node,
+        state: {
+          selected: childNode.state ? !!childNode.state.selected : false,
+          expanded: childNode.state ? !!childNode.state.expanded : false
+        },
+        text: childNode.text
       }
-      if (!node.state.selected) {
-        node.state.selected = false;
-      }
-      _this.props.nodes.push(node);
-      _this.setNodeId(node);
     });
+
   }
 
   findNodeById(nodes, id) {
@@ -65,6 +75,21 @@ class TreeView extends React.Component {
         }
       });
     return result;
+  }
+
+  deleteById(obj, id) {
+    if (!obj || obj.length <= 0)
+      return [];
+    let arr = [];
+    _.each(obj, (val) => {
+      if (val.nodes && val.nodes.length > 0)
+        val.nodes = this.deleteById(val.nodes, id);
+
+      if (val.nodeId !== id) {
+        arr.push(val);
+      }
+    });
+    return arr;
   }
 
   setChildrenState(nodes, state) {
@@ -87,38 +112,82 @@ class TreeView extends React.Component {
     let parent = node.parentNode;
     if (!parent.state || !parent.state.selected)
       return;
-    if (parent.nodes.every(function (node) {
-          return !node.state.selected
-        })) {
+    if (parent.nodes.every((childNode) => !childNode.state.selected)) {
       parent.state.selected = false;
       this.checkParentEmpty(parent);
     }
   }
 
   nodeSelected(nodeId, selected) {
-    let node = this.findNodeById(this.props.data, nodeId);
+    let node = this.findNodeById(this.state.data, nodeId);
     node.state.selected = selected;
 
-    if (selected)
-      this.setParentSelectable(node);
-    else
-      this.checkParentEmpty(node);
+    /*if (!selected)
+     this.setParent(node);*/
+    //this.setParentSelectable(node);
+    /*else
+     this.checkParentEmpty(node);*/
 
     this.setChildrenState(node.nodes, selected);
-    this.setState({data: this.props.data});
+    this.setState({data: this.state.data});
 
     if (this.props.onClick)
-      this.props.onClick(this.props.data, node);
+      this.props.onClick(this.state.data, node);
   }
 
   nodeDoubleClicked(nodeId, selected) {
-    let node = this.findNodeById(this.props.data, nodeId);
+    let node = this.findNodeById(this.state.data, nodeId);
     if (this.props.onDoubleClick)
-      this.props.onDoubleClick(this.props.data, node);
+      this.props.onDoubleClick(this.state.data, node);
+  }
+
+  convert(obj) {
+    if (!obj || obj.length <= 0)
+      return [];
+    return _.map(obj, (val) => {
+      let treeNodeData = {
+        text: val.text,
+        selected: val.state.selected
+      };
+      let children = this.convert(val.nodes);
+      if (children.length > 0)
+        treeNodeData.nodes = children;
+      return treeNodeData;
+    });
+  }
+
+  addNode(nodeId, text) {
+    let node = this.findNodeById(this.state.data, nodeId);
+
+    let newNode = {
+      text: text,
+      state: {},
+      parentNode: node,
+      nodeId: this.nodesQuantity++
+    };
+
+    if (node.nodes) {
+      node.nodes.push(newNode)
+    } else {
+      node.nodes = [newNode]
+    }
+
+    console.log(this.convert(this.state.data));
+
+    if (this.props.onNodeAdded)
+      this.props.onNodeAdded(this.state.data);
+  }
+
+  removeNode(nodeId) {
+    let newData = this.deleteById(_.clone(this.state.data), nodeId);
+    if(newData.length === 0)
+      return false;
+    this.setState({data: newData});
+    if (this.props.onNodeRemoved)
+      this.props.onNodeRemoved(newData);
   }
 
   render() {
-    console.log("render");
     let data = this.state.data;
     let children = [];
     if (data) {
@@ -131,7 +200,11 @@ class TreeView extends React.Component {
           visible: true,
           onSelectedStatusChanged: _this.nodeSelected,
           onNodeDoubleClicked: _this.nodeDoubleClicked,
-          options: _this.props
+          addNode: _this.addNode,
+          removeNode: _this.removeNode,
+          options: _this.props,
+          nodes: _this.state.data,
+          allowNew: _this.props.allowNew
         }));
       });
     }
@@ -149,6 +222,7 @@ class TreeView extends React.Component {
 TreeView.propTypes = {
   levels: React.PropTypes.number,
   expandIcon: React.PropTypes.string,
+  selectable: React.PropTypes.bool,
 
   emptyIcon: React.PropTypes.string,
   nodeIcon: React.PropTypes.string,
@@ -170,6 +244,7 @@ TreeView.propTypes = {
 
 TreeView.defaultProps = {
   levels: 2,
+  selectable: true,
 
   expandIcon: 'glyphicon glyphicon-plus',
   collapseIcon: 'glyphicon glyphicon-minus',
@@ -197,23 +272,26 @@ export class TreeNode extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {node: props.node};
-    this.expanded = (props.node.state && props.node.state.hasOwnProperty('expanded')) ?
-        props.node.state.expanded :
-        (this.props.level < this.props.options.levels);
+    this.state = {node: props.node, expanded: true};
+    /*this.expanded = (props.node.state && props.node.state.hasOwnProperty('expanded')) ?
+     props.node.state.expanded :
+     (this.props.level < this.props.options.levels);*/
     this.selected = (props.node.state && props.node.state.hasOwnProperty('selected')) ?
         props.node.state.selected :
         false;
     this.toggleExpanded = this.toggleExpanded.bind(this);
     this.toggleSelected = this.toggleSelected.bind(this);
     this.doubleClicked = this.doubleClicked.bind(this);
+    this.newNodeForm = this.newNodeForm.bind(this);
+    this.addNode = this.addNode.bind(this);
+    this.removeNode = this.removeNode.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({node: nextProps.node});
-    //this.expanded = (nextProps.node.state && nextProps.node.state.hasOwnProperty('expanded')) ?
-    //	nextProps.node.state.expanded :
-    //	(this.props.level < this.props.options.levels);
+    this.setState({node: nextProps.node, expanded: true});
+    /*this.expanded = (nextProps.node.state && nextProps.node.state.hasOwnProperty('expanded')) ?
+     nextProps.node.state.expanded :
+     (this.props.level < this.props.options.levels);*/
     this.selected = (nextProps.node.state && nextProps.node.state.hasOwnProperty('selected')) ?
         nextProps.node.state.selected :
         false;
@@ -236,9 +314,31 @@ export class TreeNode extends React.Component {
     event.stopPropagation();
   }
 
+  newNodeForm(event) {
+    this.setState({addNode: !this.state.addNode});
+    event.stopPropagation();
+  }
+
+  addNode(event) {
+    if (!new RegExp('^[a-zA-Z0-9]+$').test(this.refs.newNodeName.value)) {
+      this.refs.newNodeName.setCustomValidity("Incorrect format");
+      return false;
+    }
+    this.setState({addNode: false});
+    console.log("ref", this.refs.newNodeName.value);
+    this.props.addNode(this.state.node.nodeId, this.refs.newNodeName.value);
+    this.setState({expanded: true});
+    event.stopPropagation();
+  }
+
+  removeNode(event) {
+    this.props.removeNode(this.state.node.nodeId);
+    event.stopPropagation();
+  }
+
   render() {
-    let node = this.props.node;
-    let options = this.props.options;
+    let node = _.clone(this.props.node);
+    let options = _.clone(this.props.options);
 
     let style;
     node.icon = (node.state.selected) ? options.selectedIcon : options.unselectedIcon;
@@ -299,9 +399,10 @@ export class TreeNode extends React.Component {
       )
     }
 
-    let nodeIcon = (
-        <span className={'icon'} style={treeviewSpanIconStyle}> <i className={node.icon || options.nodeIcon}> </i> </span>
-    );
+    let nodeIcon = this.props.options.selectable ? (
+        <span className={'icon'} onClick={this.toggleSelected} style={treeviewSpanIconStyle}> <i
+            className={node.icon || options.nodeIcon}> </i> </span>
+    ) : "";
 
     let nodeText;
     if (options.enableLinks) {
@@ -335,9 +436,32 @@ export class TreeNode extends React.Component {
           visible: _this.state.expanded && _this.props.visible,
           onSelectedStatusChanged: _this.props.onSelectedStatusChanged,
           onNodeDoubleClicked: _this.props.onNodeDoubleClicked,
-          options: options
+          addNode: _this.props.addNode,
+          removeNode: _this.props.removeNode,
+          options: options,
+          allowNew: _this.props.allowNew
         }));
       });
+    }
+
+    let addButton = this.props.allowNew ? (
+        <span className="glyphicon glyphicon-plus addElement" style={{float:"right", cursor:"pointer"}}
+              onClick={this.newNodeForm}></span>) : "";
+
+    let removeButton = this.props.options.removable ? (
+        <span className="glyphicon glyphicon-remove removeElement" style={{cursor:"pointer"}}
+              onClick={this.removeNode}></span>) : "";
+
+    let newNode;
+
+    if (this.state.addNode) {
+      newNode = (<div className="input-group">
+            <input type="text" className="form-control nodeName" ref="newNodeName"/>
+					<span className="input-group-btn">
+						<span className="btn btn-primary submitNode" onClick={this.addNode}>Add</span>
+					</span>
+          </div>
+      );
     }
 
     style["cursor"] = "pointer";
@@ -345,21 +469,25 @@ export class TreeNode extends React.Component {
     let treeNode = (
         <li className="list-group-item"
             style={style}
-            onClick={this.toggleSelected}
             onDoubleClick={this.doubleClicked}
             key={node.nodeId}>
           {indents}
           {expandCollapseIcon}
           {nodeIcon}
+          {removeButton}
           {nodeText}
           {badges}
+          {addButton}
+          {newNode}
           {children}
         </li>
     );
 
-    return (<ul>
-      {treeNode}
-    </ul>);
+    return (
+        <ul>
+          {treeNode}
+        </ul>
+    );
   }
 }
 
