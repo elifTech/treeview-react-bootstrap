@@ -49,6 +49,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.TreeNode = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -97,6 +98,12 @@
 	  }
 
 	  _createClass(TreeView, [{
+	    key: "componentWillReceiveProps",
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({ data: nextProps.data });
+	      this.setNodeId({ nodes: nextProps.data });
+	    }
+	  }, {
 	    key: "setNodeId",
 	    value: function setNodeId(node) {
 
@@ -189,13 +196,15 @@
 	        (function () {
 	          var _this = _this3;
 	          data.forEach(function (node) {
-	            children.push(_react2.default.createElement(TreeNode, { node: node,
+	            children.push(_react2.default.createElement(TreeNode, {
+	              node: node,
 	              key: node.nodeId,
 	              level: 1,
 	              visible: true,
 	              onSelectedStatusChanged: _this.nodeSelected,
 	              onNodeDoubleClicked: _this.nodeDoubleClicked,
-	              options: _this.props }));
+	              options: _this.props
+	            }));
 	          });
 	        })();
 	      }
@@ -234,7 +243,7 @@
 	  showBorder: _react2.default.PropTypes.bool,
 	  showTags: _react2.default.PropTypes.bool,
 
-	  nodes: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.number)
+	  nodes: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object)
 	};
 
 	TreeView.defaultProps = {
@@ -262,7 +271,7 @@
 	  nodes: []
 	};
 
-	var TreeNode = function (_React$Component2) {
+	var TreeNode = exports.TreeNode = function (_React$Component2) {
 	  _inherits(TreeNode, _React$Component2);
 
 	  function TreeNode(props) {
@@ -273,30 +282,39 @@
 	    _this4.state = { node: props.node };
 	    _this4.expanded = props.node.state && props.node.state.hasOwnProperty('expanded') ? props.node.state.expanded : _this4.props.level < _this4.props.options.levels;
 	    _this4.selected = props.node.state && props.node.state.hasOwnProperty('selected') ? props.node.state.selected : false;
-	    _this4.toggleExpanded = _this4.toggleExpanded.bind(_this4, _this4.state.node.nodeId);
-	    _this4.toggleSelected = _this4.toggleSelected.bind(_this4, _this4.state.node.nodeId);
-	    _this4.doubleClicked = _this4.doubleClicked.bind(_this4, _this4.state.node.nodeId);
+	    _this4.toggleExpanded = _this4.toggleExpanded.bind(_this4);
+	    _this4.toggleSelected = _this4.toggleSelected.bind(_this4);
+	    _this4.doubleClicked = _this4.doubleClicked.bind(_this4);
 	    return _this4;
 	  }
 
 	  _createClass(TreeNode, [{
+	    key: "componentWillReceiveProps",
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({ node: nextProps.node });
+	      //this.expanded = (nextProps.node.state && nextProps.node.state.hasOwnProperty('expanded')) ?
+	      //	nextProps.node.state.expanded :
+	      //	(this.props.level < this.props.options.levels);
+	      this.selected = nextProps.node.state && nextProps.node.state.hasOwnProperty('selected') ? nextProps.node.state.selected : false;
+	    }
+	  }, {
 	    key: "toggleExpanded",
-	    value: function toggleExpanded(id, event) {
+	    value: function toggleExpanded(event) {
 	      this.setState({ expanded: !this.state.expanded });
 	      event.stopPropagation();
 	    }
 	  }, {
 	    key: "toggleSelected",
-	    value: function toggleSelected(id, event) {
+	    value: function toggleSelected(event) {
 	      var selected = !this.props.node.state.selected;
-	      this.props.onSelectedStatusChanged(id, selected);
+	      this.props.onSelectedStatusChanged(this.state.node.nodeId, selected);
 	      event.stopPropagation();
 	    }
 	  }, {
 	    key: "doubleClicked",
-	    value: function doubleClicked(id, event) {
+	    value: function doubleClicked(event) {
 	      var selected = !this.props.node.state.selected;
-	      this.props.onNodeDoubleClicked(id, selected);
+	      this.props.onNodeDoubleClicked(this.state.node.nodeId, selected);
 	      event.stopPropagation();
 	    }
 	  }, {
@@ -349,13 +367,15 @@
 	        if (!this.state.expanded) {
 	          expandCollapseIcon = _react2.default.createElement(
 	            "span",
-	            { className: options.expandIcon, style: treeviewSpanStyle, onClick: this.toggleExpanded },
+	            { className: options.expandIcon, style: treeviewSpanStyle,
+	              onClick: this.toggleExpanded },
 	            " "
 	          );
 	        } else {
 	          expandCollapseIcon = _react2.default.createElement(
 	            "span",
-	            { className: options.collapseIcon, style: treeviewSpanStyle, onClick: this.toggleExpanded },
+	            { className: options.collapseIcon, style: treeviewSpanStyle,
+	              onClick: this.toggleExpanded },
 	            "   "
 	          );
 	        }
@@ -374,7 +394,7 @@
 	        _react2.default.createElement(
 	          "i",
 	          { className: node.icon || options.nodeIcon },
-	          "  "
+	          " "
 	        ),
 	        " "
 	      );
@@ -416,24 +436,42 @@
 	        (function () {
 	          var _this = _this5;
 	          node.nodes.forEach(function (node) {
-	            children.push(_react2.default.createElement(TreeNode, { node: node,
+	            children.push(_react2.default.createElement(TreeNode, {
+	              node: node,
 	              key: node.nodeId,
 	              level: _this.props.level + 1,
 	              visible: _this.state.expanded && _this.props.visible,
 	              onSelectedStatusChanged: _this.props.onSelectedStatusChanged,
 	              onNodeDoubleClicked: _this.props.onNodeDoubleClicked,
-	              options: options }));
+	              options: options
+	            }));
 	          });
 	        })();
 	      }
 
 	      style["cursor"] = "pointer";
+	      if (node.parentNode.parentNode && !node.parentNode.parentNode.nodeId) style["border"] = "none";
 
-	      return _react2.default.createElement("li", { className: "list-group-item",
-	        style: style,
-	        onClick: this.toggleSelected,
-	        onDoubleClick: this.doubleClicked,
-	        key: node.nodeId }, indents, expandCollapseIcon, nodeIcon, nodeText, badges, children);
+	      var treeNode = _react2.default.createElement(
+	        "li",
+	        { className: "list-group-item",
+	          style: style,
+	          onClick: this.toggleSelected,
+	          onDoubleClick: this.doubleClicked,
+	          key: node.nodeId },
+	        indents,
+	        expandCollapseIcon,
+	        nodeIcon,
+	        nodeText,
+	        badges,
+	        children
+	      );
+
+	      return _react2.default.createElement(
+	        "ul",
+	        null,
+	        treeNode
+	      );
 	    }
 	  }]);
 
