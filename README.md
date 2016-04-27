@@ -1,9 +1,9 @@
 # treeview-react-bootstrap
 
-  Nice, easy to use component to displaying tree structures, made with 
-  <a href="https://github.com/facebook/react">React</a> and 
+  Nice, easy to use component to displaying tree structures, made with
+  <a href="https://github.com/facebook/react">React</a> and
   <a href="https://github.com/twbs/bootstrap">Twitter Bootstrap</a> <br />
-  Based on <a href="https://github.com/jonmiles/react-bootstrap-treeview">jonmiles/react-bootstrap-treeview</a>, 
+  Based on <a href="https://github.com/jonmiles/react-bootstrap-treeview">jonmiles/react-bootstrap-treeview</a>,
   but provides a set of additional useful features
 ##### Try it :
   You can see an example <a href="http://eliftech.github.io/treeview-react-bootstrap">here</a>
@@ -14,10 +14,15 @@
 </code></pre>
 
 ### Usage
-
 <pre><code>
-  var TreeView = require('treeview-react-bootstrap');
+  TreeView = require('treeview-react-bootstrap').default;
 </code></pre>
+
+###### es2015 style import
+<pre><code>
+  import TreeView from 'treeview-react-bootstrap';
+</code></pre>
+
 ###### if you use *.jsx :
 <pre><code>
   React.render(
