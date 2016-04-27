@@ -27,9 +27,11 @@
 </pre>
 
 ###### es2015 style import
-<pre><code>
+<pre>
+ <code>
   import TreeView from 'treeview-react-bootstrap';
-</code></pre>
+ </code>
+</pre>
 
 ##### Render
 
