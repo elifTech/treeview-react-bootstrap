@@ -9,17 +9,22 @@
   You can see an example <a href="http://eliftech.github.io/treeview-react-bootstrap">here</a>
 
 ### Installation
-<pre><code>
+
+<pre>
+ <code>
   npm install treeview-react-bootstrap --save
-</code></pre>
+ </code>
+</pre>
 
 ### Usage
 
 ##### Import
 
-<pre><code>
+<pre>
+ <code>
   TreeView = require('treeview-react-bootstrap').default;
-</code></pre>
+ </code>
+</pre>
 
 ###### es2015 style import
 <pre><code>
@@ -29,20 +34,24 @@
 ##### Render
 
 ###### in \*.jsx :
-<pre><code>
+<pre>
+ <code>
   React.render(
     &lt;TreeView data={data} /&gt;,
     document.getElementById('treeview')
  );
-</code></pre>
+ </code>
+</pre>
 
 ###### in \*.js :
-<pre><code>
+<pre>
+ <code>
   React.render(                
 	React.createElement(TreeView, {data: data}),
 	document.getElementById('treeview')
   );
-</code></pre>
+ </code>
+</pre>
 
 ##### Options
 
