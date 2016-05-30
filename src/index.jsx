@@ -56,7 +56,8 @@ class TreeView extends React.Component {
           selected: childNode.state ? !!childNode.state.selected : false,
           expanded: childNode.state ? !!childNode.state.expanded : false
         },
-        text: childNode.text
+        text: childNode.text,
+        icon: childNode.icon
       }
     });
 
@@ -341,7 +342,9 @@ export class TreeNode extends React.Component {
     let options = _.clone(this.props.options);
 
     let style;
-    node.icon = (node.state.selected) ? options.selectedIcon : options.unselectedIcon;
+
+    if(this.props.options.selectable) node.icon = (node.state.selected) ? options.selectedIcon : options.unselectedIcon;
+
     if (!this.props.visible) {
 
       style = {
@@ -399,7 +402,7 @@ export class TreeNode extends React.Component {
       )
     }
 
-    let nodeIcon = this.props.options.selectable ? (
+    let nodeIcon = (node.icon || options.nodeIcon) ? (
         <span className={'icon'} onClick={this.toggleSelected} style={treeviewSpanIconStyle}> <i
             className={node.icon || options.nodeIcon}> </i> </span>
     ) : "";
@@ -457,9 +460,9 @@ export class TreeNode extends React.Component {
     if (this.state.addNode) {
       newNode = (<div className="input-group">
             <input type="text" className="form-control nodeName" ref="newNodeName"/>
-					<span className="input-group-btn">
-						<span className="btn btn-primary submitNode" onClick={this.addNode}>Add</span>
-					</span>
+          <span className="input-group-btn">
+            <span className="btn btn-primary submitNode" onClick={this.addNode}>Add</span>
+          </span>
           </div>
       );
     }
