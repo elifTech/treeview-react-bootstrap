@@ -1,3 +1,5 @@
+var TreeView = window.default;
+
 var data = [
   {
     text: 'Parent 1',
@@ -23,7 +25,7 @@ var data = [
   },
   {
     text: 'Parent 3',
-state:{expanded:false},
+    state:{expanded:false},
     nodes: [
       {
         text: 'Child 1',
@@ -48,7 +50,7 @@ state:{expanded:false},
 ];
 
 
-React.render(                
-        React.createElement(TreeView, {data: data}),
-        document.getElementById('treeview')
-      );
+ReactDOM.render(
+  React.createElement(TreeView, {data: data}),
+  document.getElementById('treeview')
+);
